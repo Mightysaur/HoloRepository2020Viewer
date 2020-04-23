@@ -1,3 +1,4 @@
+import os
 import logging
 import argparse
 from argparse import RawTextHelpFormatter
@@ -82,12 +83,14 @@ def add_parser_arguments(parser):
 
 
 def run(args):
-    logging.info("Loading and initializing bone pipeline dynamically")
     flair_input_directory = args.flair_input
     t1_input_directory = args.t1_input
     ir_input_directory = args.ir_input
     output_path = args.output
+    if os.path.exists(output_path):
+        raise Exception("Output file location already exists.")
     segment_type = args.type
+    logging.info("Loading and initializing bone pipeline dynamically")
     pipeline_module = load_pipeline_dynamically(plid)
     pipeline_module.run(
         flair_input_directory,

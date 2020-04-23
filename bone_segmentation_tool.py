@@ -1,3 +1,4 @@
+import os
 import argparse
 import logging
 from core.pipelines.pipelines_controller import (
@@ -35,9 +36,11 @@ def add_parser_arguments(parser):
 
 
 def run(args):
-    logging.info("Loading and initializing bone pipeline dynamically")
     input_dir = args.input
     output_path = args.output
+    if os.path.exists(output_path):
+        raise Exception("Output file location already exists.")
+    logging.info("Loading and initializing bone pipeline dynamically")
     pipeline_module = load_pipeline_dynamically(plid)
     pipeline_module.run(input_dir, output_path)
     logging.info("Done.")

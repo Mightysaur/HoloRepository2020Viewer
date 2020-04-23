@@ -1,5 +1,6 @@
-import logging
+import os
 import argparse
+import logging
 from argparse import RawTextHelpFormatter
 from core.pipelines.pipelines_controller import (
     get_pipeline_description,
@@ -59,10 +60,12 @@ def add_parser_arguments(parser):
 
 
 def run(args):
-    logging.info("Loading and initializing abdominal pipeline dynamically")
     input_dir = args.input
     output_path = args.output
+    if os.path.exists(output_path):
+        raise Exception("Output file location already exists.")
     segment_type = args.type
+    logging.info("Loading and initializing abdominal pipeline dynamically")
     pipeline_module = load_pipeline_dynamically(plid)
     pipeline_module.run(input_dir, output_path, segment_type)
     logging.info("Done.")
